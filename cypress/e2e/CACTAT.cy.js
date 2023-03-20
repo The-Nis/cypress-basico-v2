@@ -13,7 +13,7 @@ describe('CAC-TAT', () => {
         cy.get('#firstName').type('Denis')
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email.com')
-        cy.get('#open-text-area').type(texto)
+        cy.get('#open-text-area').type(texto, { delay: 100 })
         cy.get('button[type="submit"]').click()
         cy.get('.success').should('be.visible')
     });
