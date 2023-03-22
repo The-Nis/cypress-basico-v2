@@ -72,10 +72,15 @@ describe('CAC-TAT', () => {
     });
 
     //Aula 15
-    it.only('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+    it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
         cy.get('button[type="submit"]').click();
 
         cy.get('.error').should('be.visible');
+    });
+
+    //Aula 16
+    it('Envia o formulario com sucesso usando um comando customizado', () => {
+        cy.fillMandatoryFieldsAndSubmit()
     });
 });
 
