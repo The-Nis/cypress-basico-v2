@@ -1,3 +1,6 @@
+
+
+
 describe('CAC-TAT', () => {
     beforeEach(() => {
         cy.visit('src/index.html');
@@ -14,7 +17,7 @@ describe('CAC-TAT', () => {
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email.com')
         cy.get('#open-text-area').type(texto, { delay: 0 })
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.success').should('be.visible')
     });
 
@@ -24,7 +27,7 @@ describe('CAC-TAT', () => {
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email,com')
         cy.get('#open-text-area').type('Teste')
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
     });
 
@@ -40,7 +43,7 @@ describe('CAC-TAT', () => {
         cy.get('#email').type('denis@email.com')
         cy.get('#phone-checkbox').check()
         cy.get('#open-text-area').type('Teste')
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
 
         cy.get('.error').should('be.visible')
     });
@@ -68,12 +71,12 @@ describe('CAC-TAT', () => {
         .clear()
         .should('have.value', '')
 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
     });
 
     //Aula 15
     it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
-        cy.get('button[type="submit"]').click();
+        cy.contains('button', 'Enviar').click();
         cy.get('.error').should('be.visible');
     });
 
@@ -81,5 +84,41 @@ describe('CAC-TAT', () => {
     it('Envia o formulario com sucesso usando um comando customizado', () => {
         cy.fillMandatoryFieldsAndSubmit()
     });
+
+    // Aula 17
+
+    it('Testar o contains', () => {
+        let texto = 'dhdjheghdjsa jdjdj kkwsdkwkd lkwdkwdw'
+
+        cy.get('#firstName').type('Denis')
+        cy.get('#lastName').type('Fernando')
+        cy.get('#email').type('denis@email.com')
+        cy.get('#open-text-area').type(texto, { delay: 0 })
+        cy.contains('button', 'Enviar').click()
+
+        cy.get('.success').should('be.visible')
+    });
+
+    //select
+
+    // .select('YouTube') - a seleção pode ser feita pelo texto
+    // .select('youtube') - pode ser feita pelo value
+    // .select(2)ou pelo indicie
+    // se for mais uma opção pode ser selecionado utilizando um array
+
+    it.only('Seleciona um produto (YouTube) por seu texto', () => {
+        cy.get('select').select('YouTube').should('have.value', 'youtube');
+    });
+
+    it.only('Seleciona um produto (Mentoria) por seu valor', () => {
+        cy.get('select').select('mentoria').should('have.value', 'mentoria');
+    });
+
+    it.only('Seleciona um produto (Blog) por seu indice', () => {
+        cy.get('select').select(1).should('have.value', 'blog');
+    });
+
+    // Aula 22
+    
 });
 
