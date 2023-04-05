@@ -106,19 +106,51 @@ describe('CAC-TAT', () => {
     // .select(2)ou pelo indicie
     // se for mais uma opção pode ser selecionado utilizando um array
 
-    it.only('Seleciona um produto (YouTube) por seu texto', () => {
+    it('Seleciona um produto (YouTube) por seu texto', () => {
         cy.get('select').select('YouTube').should('have.value', 'youtube');
     });
 
-    it.only('Seleciona um produto (Mentoria) por seu valor', () => {
+    it('Seleciona um produto (Mentoria) por seu valor', () => {
         cy.get('select').select('mentoria').should('have.value', 'mentoria');
     });
 
-    it.only('Seleciona um produto (Blog) por seu indice', () => {
+    it('Seleciona um produto (Blog) por seu indice', () => {
         cy.get('select').select(1).should('have.value', 'blog');
     });
 
-    // Aula 22
-    
+    // RADIOS
+    it('Marca o tipo de atendimento "Feedback"', () => {
+        cy.get('input[type="radio"][value="feedback"]')
+        .check()
+        .should('have.value', 'feedback');
+    });
+
+    it('Marca cada tipo de atendimento', () => {
+
+        cy.get('input[type="radio"][value="ajuda"]')
+        .check()
+        .should('be.checked')
+        .should('have.value', 'ajuda');
+        cy.get('input[type="radio"][value="elogio"]')
+        .check()
+        .should('be.checked')
+        .should('have.value', 'elogio');
+        cy.get('input[type="radio"][value="feedback"]')
+        .check()
+        .should('be.checked')
+        .should('have.value', 'feedback');
+        
+    });
+
+    it.only('Marca cada tipo de atendimento', () => {
+        cy.get('input[type="radio"]')
+        .should('have.length', 3)
+        .each(($radio) => {
+            cy.wrap($radio).check()
+            cy.wrap($radio).should('be.checked')
+        })
+    });
+    // Estudar o .each e cy.wrap()
+    // AULA 24
 });
 
