@@ -1,6 +1,8 @@
 
 
 
+
+
 describe('CAC-TAT', () => {
     beforeEach(() => {
         cy.visit('src/index.html');
@@ -142,7 +144,7 @@ describe('CAC-TAT', () => {
         
     });
 
-    it.only('Marca cada tipo de atendimento', () => {
+    it('Marca cada tipo de atendimento', () => {
         cy.get('input[type="radio"]')
         .should('have.length', 3)
         .each(($radio) => {
@@ -150,7 +152,44 @@ describe('CAC-TAT', () => {
             cy.wrap($radio).should('be.checked')
         })
     });
-    // Estudar o .each e cy.wrap()
-    // AULA 24
+    // Estudar o .each e cy.wrap() aula 24
+
+    it('marcar ambos checkboxes, depois desmarcar o último', () => {
+        cy.get('input[type="checkbox"]')
+        .check()
+        .should('be.checked')
+        .last()
+        .uncheck()
+        .should('not.be.checked')
+    });
+
+    it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+        cy.get('#firstName')
+        .type('Denis')
+        cy.get('#lastName')
+        .type('Fernando')
+        cy.get('#email')
+        .type('denis@mail.com')
+        cy.get('#phone-checkbox')
+        .check()
+        cy.get('button[type="submit"]')
+        .click()
+        cy.get('.error')
+        .should('be.visible')
+    });
+
+    // AULA 28 fazer upload de arquivos
+
+    it.only('seleciona um arquivo da pasta fixtures', () => {
+        cy.get('input[type="file"]')
+        .should('not.have.value')
+        .selectFile('cypress/fixtures/example.json')
+        .should(($input) => {
+            expect($input[0].files[0].name).to.equal('example.json')
+        })
+    });
+
+    // aula 30
+
 });
 
