@@ -1,4 +1,4 @@
-
+/// <reference types="Cypress" />
 
 
 
@@ -180,16 +180,50 @@ describe('CAC-TAT', () => {
 
     // AULA 28 fazer upload de arquivos
 
-    it.only('seleciona um arquivo da pasta fixtures', () => {
+    it('seleciona um arquivo da pasta fixtures', () => {
         cy.get('input[type="file"]')
         .should('not.have.value')
         .selectFile('cypress/fixtures/example.json')
         .should(($input) => {
             expect($input[0].files[0].name).to.equal('example.json')
         })
+
     });
 
-    // aula 30
+    // Aula 30 Drag and drop
+
+    it('seleciona um arquivo simulando um drag-and-drop', () => {
+        cy.get('input[type="file"]')
+        .should('not.have.value')
+        .selectFile('cypress/fixtures/example.json', { action: 'drag-drop'})
+        .should(($input) => {
+            expect($input[0].files[0].name).to.equal('example.json')
+        })
+    });
+
+    it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', () => {
+        cy.fixture('example.json').as('sampleFile')
+        cy.get('input[type="file"]').selectFile('@sampleFile')
+        .should(($input) => {
+            expect($input[0].files[0].name).to.equal('example.json')
+        })
+    });
+
+    // 32 - Links que direcionam para outra aba
+
+    it('verifica que a politica de privacidade abre em outra aba sem a necessidade de um click', () => {
+        cy.get('#privacy a').should('have.attr', 'target', '_blank');
+    });
+
+    it.only('acessa a pagina da polictica de privacidade removendo o target e então clicando no link', () => {
+        cy.get('#privacy a')
+        .invoke('removeAttr', 'target')
+        .click()
+
+        cy.contains('Talking About Testing').should('be.visible');
+    });
+
+    // aula 36
 
 });
 
