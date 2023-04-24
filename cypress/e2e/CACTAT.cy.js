@@ -4,6 +4,8 @@
 
 
 describe('CAC-TAT', () => {
+    var three_seconds_in_ms = 3000
+
     beforeEach(() => {
         cy.visit('src/index.html');
     });
@@ -15,22 +17,30 @@ describe('CAC-TAT', () => {
     it('Preenche os campos obrigatórios e envia o formulario', () => {
         let texto = 'dhdjheghdjsa jdjdj kkwsdkwkd lkwdkwdw'
 
+        cy.clock()
+
         cy.get('#firstName').type('Denis')
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email.com')
         cy.get('#open-text-area').type(texto, { delay: 0 })
         cy.contains('button', 'Enviar').click()
         cy.get('.success').should('be.visible')
+        cy.tick(three_seconds_in_ms)
+        cy.get('.success').should('not.be.visible')
     });
 
     // Aula 11
     it('Exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
+        cy.clock()
         cy.get('#firstName').type('Denis')
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email,com')
         cy.get('#open-text-area').type('Teste')
         cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
+        cy.tick(three_seconds_in_ms)
+        cy.get('.success').should('not.be.visible')
+
     });
 
     //Aula 12
@@ -40,6 +50,7 @@ describe('CAC-TAT', () => {
 
     //Aula 13
     it('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulario', () => {
+        cy.clock()
         cy.get('#firstName').type('Denis')
         cy.get('#lastName').type('Fernando')
         cy.get('#email').type('denis@email.com')
@@ -48,6 +59,8 @@ describe('CAC-TAT', () => {
         cy.contains('button', 'Enviar').click()
 
         cy.get('.error').should('be.visible')
+        cy.tick(three_seconds_in_ms)
+        cy.get('.error').should('not.be.visible')
     });
     
     //Aula 14
@@ -78,13 +91,19 @@ describe('CAC-TAT', () => {
 
     //Aula 15
     it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+        cy.clock()
         cy.contains('button', 'Enviar').click();
         cy.get('.error').should('be.visible');
+        cy.tick(three_seconds_in_ms)
+        cy.get('.error').should('not.be.visible')
     });
 
     //Aula 16
     it('Envia o formulario com sucesso usando um comando customizado', () => {
+        cy.clock()
         cy.fillMandatoryFieldsAndSubmit()
+        cy.tick(three_seconds_in_ms)
+        cy.get('.success').should('not.be.visible')
     });
 
     // Aula 17
@@ -215,15 +234,79 @@ describe('CAC-TAT', () => {
         cy.get('#privacy a').should('have.attr', 'target', '_blank');
     });
 
-    it.only('acessa a pagina da polictica de privacidade removendo o target e então clicando no link', () => {
+    it('acessa a pagina da polictica de privacidade removendo o target e então clicando no link', () => {
         cy.get('#privacy a')
         .invoke('removeAttr', 'target')
         .click()
 
         cy.contains('Talking About Testing').should('be.visible');
     });
+ 
+    // aula 45 & 46 - cy.clock() e cy.tick()
 
-    // aula 36
+    it('Exibe mensagem por 3 segundos', () => {
+
+        
+
+        cy.clock()
+
+        let texto = 'dhdjheghdjsa jdjdj kkwsdkwkd lkwdkwdw'
+
+        cy.get('#firstName').type('Denis')
+        cy.get('#lastName').type('Fernando')
+        cy.get('#email').type('denis@email.com')
+        cy.get('#open-text-area').type(texto, { delay: 0 })
+        cy.contains('button', 'Enviar').click()
+        cy.get('.success').should('be.visible')
+
+        cy.tick(three_seconds_in_ms)
+
+        cy.get('.success').should('not.be.visible')
+    });
+
+
+    // Aula 47 e 48 - lodash
+    // lodash é uma biblioteca com diversas funções
+    // 1 - Cypress._.times() - executa uma função de callback um certo numero de vezes onde o numero de vezes é o primeiro argumento e a função callback é o segundo
+    // 2 - Cypress._.repeat() - repete uma string um certo numero de vezes onde o primeiro argumento é a string a qual deseja-se repetir e o segundo argumento quantas vez tal string deve ser repetida
+
+    Cypress._.times(5, () => {
+        it('Preenche os campos obrigatórios e envia o formulario', () => {
+            let texto = 'dhdjheghdjsa jdjdj kkwsdkwkd lkwdkwdw'
+    
+            cy.clock()
+    
+            cy.get('#firstName').type('Denis')
+            cy.get('#lastName').type('Fernando')
+            cy.get('#email').type('denis@email.com')
+            cy.get('#open-text-area').type(texto, { delay: 0 })
+            cy.contains('button', 'Enviar').click()
+            cy.get('.success').should('be.visible')
+            cy.tick(three_seconds_in_ms)
+            cy.get('.success').should('not.be.visible')
+        });
+    })
+
+    // Aula 49 e 50 - invoke(show) e invoke(hide)
+    
+    it.only('Exibe e esconde as mensagens de suscesso e erro usando o .invoke', () => {
+        cy.get('.success')
+        .should('not.be.visible')
+        .invoke('show')
+        .should('be.visible')
+        .and('contain', 'Mensagem enviada com sucesso.')
+        .invoke('hide')
+        .should('not.be.visible')
+        cy.get('.error')
+        .should('not.be.visible')
+        .invoke('show')
+        .should('be.visible')
+        .and('contain', 'Valide os campos obrigatórios!')
+        .invoke('hide')
+        .should('not.be.visible')
+        ;
+    });
+
 
 });
 
